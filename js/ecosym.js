@@ -1,5 +1,8 @@
 
 
+const range = (start, stop, step = 1) =>
+      Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
+
 class ContinuousExponential {
     b = 0.11
     d = 0.1
@@ -11,6 +14,10 @@ class ContinuousExponential {
 
     population(t) {
         return this.N0*Math.exp(this.r*t)
+    }
+
+    applyToTimespan(timespan) {
+        return timespan.map((t) => this.population(t))
     }
 
     doublingTime() {
