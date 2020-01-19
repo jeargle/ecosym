@@ -28,10 +28,6 @@ class Continuous {
     applyToTimespan(timespan) {
         return timespan.map((t) => this.population(t))
     }
-
-    doublingTime() {
-        return Math.log(2)/this.r
-    }
 }
 
 
@@ -46,7 +42,6 @@ class Discrete {
     lambda = null   // finite rate of increase
 
     constructor() {
-        this.r = this.b - this.d
     }
 
     population(t) {
@@ -55,10 +50,6 @@ class Discrete {
 
     applyToTimespan(timespan) {
         return timespan.map((t) => this.population(t))
-    }
-
-    doublingTime() {
-        return Math.log(2)/this.r
     }
 }
 
@@ -72,18 +63,23 @@ class Discrete {
  *   continuous growth with no time lags
  */
 class ContinuousExponential extends Continuous {
-    // b = 0.11   // birth rate
-    // d = 0.1    // death rate
-    // N0 = 100   // population size at time 0
-    // r = null   // instantaneous rate of increase
 
     constructor() {
         super()
         this.r = this.b - this.d
     }
 
+    /**
+     * population at time t
+     * @param t {number} - time
+     * @return {number}
+     */
     population(t) {
         return this.N0*Math.exp(this.r*t)
+    }
+
+    doublingTime() {
+        return Math.log(2)/this.r
     }
 }
 
@@ -96,24 +92,21 @@ class ContinuousExponential extends Continuous {
  *   no age or size structure
  *   discrete growth with no time lags
  */
-class DiscreteExponential {
-    // b = 0.11
-    // d = 0.1
-    // N0 = 100
-    // rd = null
-    // lambda = null
+class DiscreteExponential extends Discrete {
 
     constructor() {
         super()
         this.r = this.b - this.d
+        this.lambda = this.r + 1
     }
 
+    /**
+     * population at time t
+     * @param t {number} - time
+     * @return {number}
+     */
     population(t) {
-        return
-    }
-
-    applyToTimespan(timespan) {
-        return timespan.map((t) => this.population(t))
+        return this.N0 * this.lambda**t
     }
 
     doublingTime() {
@@ -133,14 +126,6 @@ class EnvironmentalStochasticity {
     population(t) {
         return
     }
-
-    applyToTimespan(timespan) {
-        return timespan.map((t) => this.population(t))
-    }
-
-    doublingTime() {
-        return Math.log(2)/this.r
-    }
 }
 
 
@@ -156,16 +141,7 @@ class DemographicStochasticity {
     population(t) {
         return
     }
-
-    applyToTimespan(timespan) {
-        return timespan.map((t) => this.population(t))
-    }
-
-    doublingTime() {
-        return Math.log(2)/this.r
-    }
 }
-
 
 
 
