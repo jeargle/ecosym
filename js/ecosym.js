@@ -45,7 +45,7 @@ class Discrete {
     }
 
     population(t) {
-        return
+        return this.N0
     }
 
     applyToTimespan(timespan) {
@@ -114,7 +114,7 @@ class DiscreteExponential extends Discrete {
     }
 }
 
-class EnvironmentalStochasticity {
+class EnvironmentalStochasticity extends Continuous {
     b = 0.11
     d = 0.1
     N0 = 100
@@ -129,7 +129,7 @@ class EnvironmentalStochasticity {
 }
 
 
-class DemographicStochasticity {
+class DemographicStochasticity extends Discrete {
     b = 0.11
     d = 0.1
     N0 = 100
