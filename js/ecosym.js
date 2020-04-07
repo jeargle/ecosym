@@ -3,6 +3,16 @@
 const range = (start, stop, step = 1) =>
       Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
 
+/**
+ * Gaussian distribution sample using Box-Muller transform
+ */
+const randGaussian = (mean=0.0, stdev=1.0) => {
+    let r1 = 0, r2 = 0
+    while (r1 === 0) r1 = Math.random()  // Converting [0,1) to (0,1)
+    while (r2 === 0) r2 = Math.random()
+    return mean + Math.sqrt( -2.0 * Math.log( r1 ) ) * Math.cos( 2.0 * Math.PI * r2 ) * stdev
+}
+
 
 /**
  * Abstract continuous model.
