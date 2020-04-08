@@ -15,7 +15,7 @@ const randGaussian = (mean=0.0, stdev=1.0) => {
 
 
 /**
- * Abstract continuous model.
+ * Abstract continuous-time model.
  */
 class Continuous {
     b = 0.11   // birth rate
@@ -42,7 +42,7 @@ class Continuous {
 
 
 /**
- * Abstract discrete model.
+ * Abstract discrete-time model.
  */
 class Discrete {
     b = 0.11
@@ -70,7 +70,7 @@ class Discrete {
  *   constant birth and death rates
  *   no genetic structure
  *   no age or size structure
- *   continuous growth with no time lags
+ *   continuous-time growth with no time lags
  */
 class ContinuousExponential extends Continuous {
 
@@ -100,7 +100,7 @@ class ContinuousExponential extends Continuous {
  *   constant birth and death rates
  *   non-overlapping generations
  *   no age or size structure
- *   discrete growth with no time lags
+ *   discrete-time growth with no time lags
  */
 class DiscreteExponential extends Discrete {
 
@@ -124,7 +124,16 @@ class DiscreteExponential extends Discrete {
     }
 }
 
-class EnvironmentalStochasticity extends Continuous {
+
+/**
+ * Environment stochasticity model
+ * assumptions:
+ *   birth and death rates fluctuate about mean
+ *   non-overlapping generations
+ *   no age or size structure
+ *   discrete-time growth with no time lags
+ */
+class EnvironmentalStochasticity extends Discrete {
     b = 0.11
     d = 0.1
     N0 = 100
@@ -139,6 +148,14 @@ class EnvironmentalStochasticity extends Continuous {
 }
 
 
+/**
+ * Demographic stochasticity model
+ * assumptions:
+ *   probabilistic birth and death events
+ *   non-overlapping generations
+ *   no age or size structure
+ *   discrete-time growth with no time lags
+ */
 class DemographicStochasticity extends Discrete {
     b = 0.11
     d = 0.1
