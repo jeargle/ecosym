@@ -169,9 +169,3 @@ class DemographicStochasticity extends Discrete {
         return
     }
 }
-
-
-
-$(document).ready(function() {
-    'use strict'
-})
