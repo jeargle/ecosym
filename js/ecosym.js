@@ -137,13 +137,41 @@ class EnvironmentalStochasticity extends Discrete {
     b = 0.11
     d = 0.1
     N0 = 100
+    rMean = 0.01
+    rStdev = 0.05
 
-    constructor() {
-        this.r = this.b - this.d
+    constructor(rMean=0.01, rStdev=0.05) {
+        super()
+        this.rMean = rMean
+        this.rStdev = rStdev
     }
 
-    population(t) {
-        return
+    /**
+     * population based on growth since previous timestep
+     * @param prevPop {number} - previous population count
+     * @param timestep {number} - amount of time passed
+     * @return {number} - next population count
+     */
+    populationNext(prevPop, timestep) {
+        let model = this
+        let rRand = randGaussian(model.rMean, model.rStdev)
+        return prevPop + prevPop * rRand * timestep
+    }
+
+    applyToTimespan(timespan) {
+        let model = this
+        let popSpan = new Array(timespan.length).fill(0)
+        popSpan[0] = model.N0
+
+        let timestep = 0
+        if (timespan.length > 1) {
+            timestep = timespan[1] - timespan[0]
+        }
+        for (let i=1; i<timespan.length; i++) {
+            popSpan[i] = model.populationNext(popSpan[i-1], timestep)
+        }
+
+        return popSpan
     }
 }
 
@@ -165,7 +193,7 @@ class DemographicStochasticity extends Discrete {
         this.r = this.b - this.d
     }
 
-    population(t) {
-        return
+    applyToTimespan(timespan) {
+        return timespan.map((t) => this.population(t))
     }
 }

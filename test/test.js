@@ -45,6 +45,22 @@ test.testDiscreteExponential = function() {
 }
 
 
+test.testEnvironmentalStochasticity = function() {
+    'use strict'
+
+    console.log('\n\n***** EnvironmentalStochasticity Test *****\n')
+
+    let es1 = new EnvironmentalStochasticity()
+    let times1 = range(0, 31)
+    let popSpan1 = es1.applyToTimespan(times1)
+    for (let i=0; i<times1.length; i++) {
+        console.log('population(' + times1[i] + '): ' + popSpan1[i])
+    }
+    console.log('\n')
+}
+
+
 test.testRange()
 test.testContinuousExponential()
 test.testDiscreteExponential()
+test.testEnvironmentalStochasticity()
