@@ -1,5 +1,12 @@
 
 
+/**
+ * Build Array of numbers evenly spaced across a range
+ * @param start {number} - starting point (included)
+ * @param stop {number} - stopping pint (not included)
+ * @param step {number} - time; default 1
+ * @return {Array[number]}
+ */
 const range = (start, stop, step = 1) =>
       Array(Math.ceil((stop - start) / step)).fill(start).map((x, y) => x + y * step)
 
@@ -27,7 +34,7 @@ class Continuous {
     }
 
     /**
-     * population at time t
+     * Population at time t
      * @param t {number} - time
      * @return {number}
      */
@@ -35,6 +42,11 @@ class Continuous {
         return this.N0
     }
 
+    /**
+     * Calculate population at all points in a timespan
+     * @param timespan {Array[number]} - array of timepoints
+     * @return {Array[number]} - array of population counts
+     */
     applyToTimespan(timespan) {
         return timespan.map((t) => this.population(t))
     }
@@ -54,12 +66,35 @@ class Discrete {
     constructor() {
     }
 
-    population(t) {
-        return this.N0
+    /**
+     * Population based on growth since previous timestep
+     * @param prevPop {number} - previous population count
+     * @param timestep {number} - amount of time passed
+     * @return {number} - next population count
+     */
+    populationNext(prevPop, timestep) {
+        return prevPop
     }
 
+    /**
+     * Calculate population at all points in a timespan
+     * @param timespan {Array[number]} - array of timepoints
+     * @return {Array[number]} - array of population counts
+     */
     applyToTimespan(timespan) {
-        return timespan.map((t) => this.population(t))
+        let model = this
+        let popSpan = new Array(timespan.length).fill(0)
+        popSpan[0] = model.N0
+
+        let timestep = 0
+        if (timespan.length > 1) {
+            timestep = timespan[1] - timespan[0]
+        }
+        for (let i=1; i<timespan.length; i++) {
+            popSpan[i] = model.populationNext(popSpan[i-1], timestep)
+        }
+
+        return popSpan
     }
 }
 
@@ -79,11 +114,6 @@ class ContinuousExponential extends Continuous {
         this.r = this.b - this.d
     }
 
-    /**
-     * population at time t
-     * @param t {number} - time
-     * @return {number}
-     */
     population(t) {
         return this.N0*Math.exp(this.r*t)
     }
@@ -110,13 +140,12 @@ class DiscreteExponential extends Discrete {
         this.lambda = this.r + 1
     }
 
-    /**
-     * population at time t
-     * @param t {number} - time
-     * @return {number}
-     */
     population(t) {
         return this.N0 * this.lambda**t
+    }
+
+    applyToTimespan(timespan) {
+        return timespan.map((t) => this.population(t))
     }
 
     doublingTime() {
@@ -137,8 +166,8 @@ class EnvironmentalStochasticity extends Discrete {
     b = 0.11
     d = 0.1
     N0 = 100
-    rMean = 0.01
-    rStdev = 0.05
+    rMean = 0.01    // mean growth rate
+    rStdev = 0.05   // standard deviation of growth rate
 
     constructor(rMean=0.01, rStdev=0.05) {
         super()
@@ -146,32 +175,10 @@ class EnvironmentalStochasticity extends Discrete {
         this.rStdev = rStdev
     }
 
-    /**
-     * population based on growth since previous timestep
-     * @param prevPop {number} - previous population count
-     * @param timestep {number} - amount of time passed
-     * @return {number} - next population count
-     */
     populationNext(prevPop, timestep) {
         let model = this
         let rRand = randGaussian(model.rMean, model.rStdev)
         return prevPop + prevPop * rRand * timestep
-    }
-
-    applyToTimespan(timespan) {
-        let model = this
-        let popSpan = new Array(timespan.length).fill(0)
-        popSpan[0] = model.N0
-
-        let timestep = 0
-        if (timespan.length > 1) {
-            timestep = timespan[1] - timespan[0]
-        }
-        for (let i=1; i<timespan.length; i++) {
-            popSpan[i] = model.populationNext(popSpan[i-1], timestep)
-        }
-
-        return popSpan
     }
 }
 
@@ -179,7 +186,7 @@ class EnvironmentalStochasticity extends Discrete {
 /**
  * Demographic stochasticity model
  * assumptions:
- *   probabilistic birth and death events
+ *   stochastic, discrete birth and death events
  *   non-overlapping generations
  *   no age or size structure
  *   discrete-time growth with no time lags
@@ -195,12 +202,6 @@ class DemographicStochasticity extends Discrete {
         this.eventRate = this.b + this.d
     }
 
-    /**
-     * population based on growth since previous timestep
-     * @param prevPop {number} - previous population count
-     * @param timestep {number} - amount of time passed
-     * @return {number} - next population count
-     */
     populationNext(prevPop, timestep) {
         let model = this
         let rRand = randGaussian(model.rMean, model.rStdev)
@@ -224,21 +225,5 @@ class DemographicStochasticity extends Discrete {
         console.log('events: ' + eventString)
 
         return nextPop
-    }
-
-    applyToTimespan(timespan) {
-        let model = this
-        let popSpan = new Array(timespan.length).fill(0)
-        popSpan[0] = model.N0
-
-        let timestep = 0
-        if (timespan.length > 1) {
-            timestep = timespan[1] - timespan[0]
-        }
-        for (let i=1; i<timespan.length; i++) {
-            popSpan[i] = model.populationNext(popSpan[i-1], timestep)
-        }
-
-        return popSpan
     }
 }
