@@ -190,10 +190,55 @@ class DemographicStochasticity extends Discrete {
     N0 = 100
 
     constructor() {
+        super()
         this.r = this.b - this.d
+        this.eventRate = this.b + this.d
+    }
+
+    /**
+     * population based on growth since previous timestep
+     * @param prevPop {number} - previous population count
+     * @param timestep {number} - amount of time passed
+     * @return {number} - next population count
+     */
+    populationNext(prevPop, timestep) {
+        let model = this
+        let rRand = randGaussian(model.rMean, model.rStdev)
+        let floatEvents = model.eventRate * prevPop * timestep
+        let numEvents = Math.floor(floatEvents)
+        let eventRemainder = floatEvents - numEvents
+        numEvents += Math.random() < eventRemainder ? 1 : 0
+        let nextPop = prevPop
+        let birthProbability = model.b / model.eventRate
+        let eventString = ''
+
+        for (let i=0; i<numEvents; i++) {
+            if (Math.random() < birthProbability) {
+                nextPop += 1
+                eventString += 'B'
+            } else {
+                nextPop -= 1
+                eventString += 'D'
+            }
+        }
+        console.log('events: ' + eventString)
+
+        return nextPop
     }
 
     applyToTimespan(timespan) {
-        return timespan.map((t) => this.population(t))
+        let model = this
+        let popSpan = new Array(timespan.length).fill(0)
+        popSpan[0] = model.N0
+
+        let timestep = 0
+        if (timespan.length > 1) {
+            timestep = timespan[1] - timespan[0]
+        }
+        for (let i=1; i<timespan.length; i++) {
+            popSpan[i] = model.populationNext(popSpan[i-1], timestep)
+        }
+
+        return popSpan
     }
 }
