@@ -75,8 +75,32 @@ test.testDemographicStochasticity = function() {
 }
 
 
+test.testContinuousLogistic = function() {
+    'use strict'
+
+    console.log('\n\n***** ContinuousLogistic Test *****\n')
+
+    let cl1 = new ContinuousLogistic()
+    let times1 = range(0, 501, 20)
+    let popSpan1 = cl1.applyToTimespan(times1)
+    for (let i=0; i<times1.length; i++) {
+        console.log('population(' + times1[i] + '): ' + popSpan1[i])
+    }
+    console.log('\n')
+
+    let cl2 = new ContinuousLogistic(150, 200)
+    let times2 = range(0, 501, 20)
+    let popSpan2 = cl2.applyToTimespan(times2)
+    for (let i=0; i<times2.length; i++) {
+        console.log('population(' + times2[i] + '): ' + popSpan2[i])
+    }
+    console.log('\n')
+}
+
+
 test.testRange()
 test.testContinuousExponential()
 test.testDiscreteExponential()
 test.testEnvironmentalStochasticity()
 test.testDemographicStochasticity()
+test.testContinuousLogistic()

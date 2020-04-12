@@ -227,3 +227,30 @@ class DemographicStochasticity extends Discrete {
         return nextPop
     }
 }
+
+
+/**
+ * Continuous logistic model
+ * assumptions:
+ *   density dependent birth (b') and death (d') rates
+ *   no genetic structure
+ *   no age or size structure
+ *   continuous-time growth with no time lags
+ */
+class ContinuousLogistic extends Continuous {
+    b = 0.11   // birth rate
+    d = 0.1    // death rate
+    N0 = 100   // population size at time 0
+    K = 150    // carrying capacity K = (b - d) / (a + c)
+
+    constructor(K=150, N0=100) {
+        super()
+        this.r = this.b - this.d
+        this.K = K
+        this.N0 = N0
+    }
+
+    population(t) {
+        return this.K / (1 + ((this.K-this.N0)/this.N0) * Math.exp(-this.r*t))
+    }
+}
