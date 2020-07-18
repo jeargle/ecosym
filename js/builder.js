@@ -174,12 +174,12 @@ class ModelList {
  */
 class Plotter {
     plotId = 'plot'
-    ecoModel = null   // ecosym model
+    ecoModels = []   // ecosym models
     timespan = []     // set of timepoints (x-axis)
 
-    constructor(plotId='plot', ecoModel=null, timespan=[]) {
+    constructor(plotId='plot', ecoModels=[], timespan=[]) {
         this.plotId = plotId
-        this.ecoModel = ecoModel
+        this.ecoModels = ecoModels
         this.timespan = timespan
     }
 
@@ -187,9 +187,9 @@ class Plotter {
      * Set ecosym model
      * @param ecoModel {Object} - ecosym model
      */
-    setEcoModel(ecoModel) {
-        this.ecoModel = ecoModel
-    }
+    // setEcoModel(ecoModel) {
+    //     this.ecoModel = ecoModel
+    // }
 
     /**
      * Set timespan
@@ -205,10 +205,21 @@ class Plotter {
     plot() {
         let model = this
         let plotDiv = document.getElementById(model.plotId)
-        let population = model.ecoModel.applyToTimespan(model.timespan)
+        // let population = model.ecoModel.applyToTimespan(model.timespan)
+        let populations = []
+
+        for (let i=0; i<model.ecoModels.length; i++) {
+            populations.push({
+                x: model.timespan,
+                // y: model.ecoModels[i].yArray(model.xArray)
+                y: model.ecoModels[i].applyToTimespan(model.timespan)
+            })
+        }
+
         Plotly.newPlot(
             plotDiv,
-            [{x: model.timespan, y: population}],
+            // [{x: model.timespan, y: population}],
+            populations,
             {margin: { t: 0 } }
         )
     }
@@ -221,7 +232,7 @@ $(document).ready(function() {
 
     let plotter1 = new Plotter(
         'plot',
-        new ContinuousExponential(),
+        [new ContinuousExponential(), new DiscreteExponential()],
         range(0, 201, 20)
     )
     plotter1.plot()
