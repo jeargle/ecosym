@@ -1,5 +1,10 @@
 
 
+body {
+    padding-left: 10px;
+    padding-top: 10px;
+}
+
 .box {
     fill: rgb(180,180,240);
 }
@@ -31,6 +36,7 @@
     height: 40px;
     width: 600px;
     padding-left: 10px;
+    margin-top: 5px;
     line-height: 40px;
     font-size: 16px;
     border: 2px solid black;
@@ -45,7 +51,7 @@
 .term-coefficient {
     float: left;
     height: 30px;
-    width: 30px;
+    width: 50px;
     margin-top: 5px;
     line-height: 30px;
     font-size: 16px;

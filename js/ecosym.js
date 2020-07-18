@@ -127,6 +127,14 @@ class ContinuousExponential extends Continuous {
     doublingTime() {
         return Math.log(2)/this.r
     }
+
+    parameters() {
+        return [
+            { name: 'N0', value: this.N0 },
+            { name: 'b', value: this.b },
+            { name: 'd', value: this.d }
+        ]
+    }
 }
 
 
@@ -156,6 +164,14 @@ class DiscreteExponential extends Discrete {
 
     doublingTime() {
         return Math.log(2)/this.r
+    }
+
+    parameters() {
+        return [
+            { name: 'N0', value: this.N0 },
+            { name: 'b', value: this.b },
+            { name: 'd', value: this.d }
+        ]
     }
 }
 
