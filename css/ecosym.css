@@ -11,3 +11,68 @@
 .box.active:hover {
     fill: rgb(200,200,100);
 }
+
+
+/**************/
+/* Model-List */
+/**************/
+
+#model-list {
+    width: 600px;
+}
+
+
+/*************/
+/* Model-Row */
+/*************/
+
+.model-row {
+    clear: both;
+    height: 40px;
+    width: 600px;
+    padding-left: 10px;
+    line-height: 40px;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+/* .term { */
+/*     float: left; */
+/*     height: 40px; */
+/* } */
+
+.term-coefficient {
+    float: left;
+    height: 30px;
+    width: 30px;
+    margin-top: 5px;
+    line-height: 30px;
+    font-size: 16px;
+    text-align: center;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.term-coefficient:hover {
+    border: 2px solid lightblue;
+}
+
+.term-coefficient:focus {
+    border: 2px solid darkblue;
+    cursor: auto;
+}
+
+.term-sign {
+    float: left;
+    width: 25px;
+    font-size: 16px;
+    text-align: right;
+}
+
+.term-order {
+    float: left;
+    height: 40px;
+    line-height: 32px;
+}
