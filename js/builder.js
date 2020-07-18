@@ -205,22 +205,19 @@ class Plotter {
     plot() {
         let model = this
         let plotDiv = document.getElementById(model.plotId)
-        // let population = model.ecoModel.applyToTimespan(model.timespan)
         let populations = []
 
         for (let i=0; i<model.ecoModels.length; i++) {
             populations.push({
                 x: model.timespan,
-                // y: model.ecoModels[i].yArray(model.xArray)
                 y: model.ecoModels[i].applyToTimespan(model.timespan)
             })
         }
 
         Plotly.newPlot(
             plotDiv,
-            // [{x: model.timespan, y: population}],
             populations,
-            {margin: { t: 0 } }
+            { margin: { t: 0 } }
         )
     }
 
@@ -232,7 +229,10 @@ $(document).ready(function() {
 
     let plotter1 = new Plotter(
         'plot',
-        [new ContinuousExponential(), new DiscreteExponential()],
+        [new ContinuousExponential(100, 0.11, 0.1),
+         new ContinuousExponential(50, 0.115, 0.1),
+         new DiscreteExponential(100, 0.11, 0.1),
+         new DiscreteExponential(50, 0.115, 0.1)],
         range(0, 201, 20)
     )
     plotter1.plot()

@@ -30,7 +30,10 @@ class Continuous {
     N0 = 100   // population size at time 0
     r = Math.log(2)   // instantaneous rate of increase
 
-    constructor() {
+    constructor(N0=100, b=0.11, d=0.1) {
+        this.N0 = N0
+        this.b = b
+        this.d = d
     }
 
     /**
@@ -63,7 +66,10 @@ class Discrete {
     rd = null   // discrete growth factor
     lambda = null   // finite rate of increase
 
-    constructor() {
+    constructor(N0=100, b=0.11, d=0.1) {
+        this.N0 = N0
+        this.b = b
+        this.d = d
     }
 
     /**
@@ -109,8 +115,8 @@ class Discrete {
  */
 class ContinuousExponential extends Continuous {
 
-    constructor() {
-        super()
+    constructor(N0=100, b=0.11, d=0.1) {
+        super(N0, b, d)
         this.r = this.b - this.d
     }
 
@@ -134,8 +140,8 @@ class ContinuousExponential extends Continuous {
  */
 class DiscreteExponential extends Discrete {
 
-    constructor() {
-        super()
+    constructor(N0=100, b=0.11, d=0.1) {
+        super(N0, b, d)
         this.r = this.b - this.d
         this.lambda = this.r + 1
     }
