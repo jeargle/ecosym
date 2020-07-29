@@ -25,15 +25,16 @@ const randGaussian = (mean=0.0, stdev=1.0) => {
  * Abstract continuous-time model.
  */
 class Continuous {
-    b = 0.11   // birth rate
-    d = 0.1    // death rate
-    N0 = 100   // population size at time 0
-    r = Math.log(2)   // instantaneous rate of increase
+    // b = 0.11   // birth rate
+    // d = 0.1    // death rate
+    // N0 = 100   // population size at time 0
+    // r = Math.log(2)   // instantaneous rate of increase
 
     constructor(N0=100, b=0.11, d=0.1) {
         this.N0 = N0
         this.b = b
         this.d = d
+        this.r = this.b - this.d
     }
 
     /**
@@ -60,16 +61,18 @@ class Continuous {
  * Abstract discrete-time model.
  */
 class Discrete {
-    b = 0.11
-    d = 0.1
-    N0 = 100
-    rd = null   // discrete growth factor
-    lambda = null   // finite rate of increase
+    // b = 0.11   // birth rate
+    // d = 0.1    // death rate
+    // N0 = 100   // population size at time 0
+    // r = null   // discrete growth factor
+    // lambda = null   // finite rate of increase
 
     constructor(N0=100, b=0.11, d=0.1) {
         this.N0 = N0
         this.b = b
         this.d = d
+        this.r = this.b - this.d
+        this.lambda = this.r + 1
     }
 
     /**
@@ -117,7 +120,6 @@ class ContinuousExponential extends Continuous {
 
     constructor(N0=100, b=0.11, d=0.1) {
         super(N0, b, d)
-        this.r = this.b - this.d
     }
 
     population(t) {
@@ -150,8 +152,6 @@ class DiscreteExponential extends Discrete {
 
     constructor(N0=100, b=0.11, d=0.1) {
         super(N0, b, d)
-        this.r = this.b - this.d
-        this.lambda = this.r + 1
     }
 
     population(t) {
@@ -185,14 +185,11 @@ class DiscreteExponential extends Discrete {
  *   discrete-time growth with no time lags
  */
 class EnvironmentalStochasticity extends Discrete {
-    b = 0.11
-    d = 0.1
-    N0 = 100
-    rMean = 0.01    // mean growth rate
-    rStdev = 0.05   // standard deviation of growth rate
+    // rMean = 0.01    // mean growth rate
+    // rStdev = 0.05   // standard deviation of growth rate
 
-    constructor(rMean=0.01, rStdev=0.05) {
-        super()
+    constructor(rMean=0.01, rStdev=0.05, N0=100, b=0.11, d=0.1) {
+        super(N0, b, d)
         this.rMean = rMean
         this.rStdev = rStdev
     }
@@ -214,19 +211,17 @@ class EnvironmentalStochasticity extends Discrete {
  *   discrete-time growth with no time lags
  */
 class DemographicStochasticity extends Discrete {
-    b = 0.11
-    d = 0.1
-    N0 = 100
 
-    constructor() {
-        super()
-        this.r = this.b - this.d
+    constructor(rMean=0.01, rStdev=0.05, N0=100, b=0.11, d=0.1) {
+        super(N0, b, d)
+        this.rMean = rMean
+        this.rStdev = rStdev
         this.eventRate = this.b + this.d
     }
 
     populationNext(prevPop, timestep) {
         let model = this
-        let rRand = randGaussian(model.rMean, model.rStdev)
+        // let rRand = randGaussian(model.rMean, model.rStdev)
         let floatEvents = model.eventRate * prevPop * timestep
         let numEvents = Math.floor(floatEvents)
         let eventRemainder = floatEvents - numEvents
@@ -260,16 +255,11 @@ class DemographicStochasticity extends Discrete {
  *   continuous-time growth with no time lags
  */
 class ContinuousLogistic extends Continuous {
-    b = 0.11   // birth rate
-    d = 0.1    // death rate
-    N0 = 100   // population size at time 0
-    K = 150    // carrying capacity K = (b - d) / (a + c)
+    // K = 150    // carrying capacity K = (b - d) / (a + c)
 
-    constructor(K=150, N0=100) {
-        super()
-        this.r = this.b - this.d
+    constructor(K=150, N0=100, b=0.11, d=0.1) {
+        super(N0, b, d)
         this.K = K
-        this.N0 = N0
     }
 
     population(t) {

@@ -235,16 +235,6 @@ class Plotter {
 $(document).ready(function() {
     'use strict'
 
-    // let plotter1 = new Plotter(
-    //     'plot',
-    //     [new ContinuousExponential(100, 0.11, 0.1),
-    //      new ContinuousExponential(50, 0.115, 0.1),
-    //      new DiscreteExponential(100, 0.11, 0.1),
-    //      new DiscreteExponential(50, 0.115, 0.1)],
-    //     range(0, 201, 20)
-    // )
-    // plotter1.plot()
-
     let ml = new ModelList(
         [new ContinuousExponential(100, 0.11, 0.1),
          new ContinuousExponential(50, 0.115, 0.1),
