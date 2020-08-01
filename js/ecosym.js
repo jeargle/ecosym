@@ -263,6 +263,29 @@ class ContinuousLogistic extends Continuous {
     }
 
     population(t) {
-        return this.K / (1 + ((this.K-this.N0)/this.N0) * Math.exp(-this.r*t))
+        return this.K / ( 1 + ( (this.K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+    }
+}
+
+
+/**
+ * Discrete logistic model
+ * assumptions:
+ *   discrete birth and death events
+ *   density dependent birth (b') and death (d') rates
+ *   non-overlapping generations
+ *   no age or size structure
+ *   discrete-time growth with no time lags
+ */
+class DiscreteLogistic extends Discrete {
+    // K = 150    // carrying capacity K = (b - d) / (a + c)
+
+    constructor(K=150, N0=100, b=0.11, d=0.1) {
+        super(N0, b, d)
+        this.K = K
+    }
+
+    populationNext(prevPop, timestep) {
+        return prevPop + this.r * prevPop * (1.0 - prevPop/this.K)
     }
 }

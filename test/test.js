@@ -98,9 +98,37 @@ test.testContinuousLogistic = function() {
 }
 
 
+test.testDiscreteLogistic = function() {
+    'use strict'
+
+    console.log('\n\n***** DiscreteLogistic Test *****\n')
+
+    let dl1 = new DiscreteLogistic()
+    let times1 = range(0, 501, 20)
+    let popSpan1 = dl1.applyToTimespan(times1)
+    for (let i=0; i<times1.length; i++) {
+        console.log('population(' + times1[i] + '): ' + popSpan1[i])
+    }
+    console.log('\n')
+
+    let K = 500
+    let N0 = 200
+    let b = 3.52   // 2.8, 3.25, 3.52
+    let d = 1.0
+    let dl2 = new DiscreteLogistic(K, N0, b, d)
+    let times2 = range(0, 501, 20)
+    let popSpan2 = dl2.applyToTimespan(times2)
+    for (let i=0; i<times2.length; i++) {
+        console.log('population(' + times2[i] + '): ' + popSpan2[i])
+    }
+    console.log('\n')
+}
+
+
 test.testRange()
 test.testContinuousExponential()
 test.testDiscreteExponential()
 test.testEnvironmentalStochasticity()
 test.testDemographicStochasticity()
 test.testContinuousLogistic()
+test.testDiscreteLogistic()
