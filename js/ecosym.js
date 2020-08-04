@@ -269,6 +269,59 @@ class ContinuousLogistic extends Continuous {
 
 
 /**
+ * Continuous logistic model with stochastic carrying capacity
+ * assumptions:
+ *   density dependent birth (b') and death (d') rates
+ *   no genetic structure
+ *   no age or size structure
+ *   continuous-time growth with no time lags
+ *   stochastic carrying capacity
+ */
+class StochasticCapacity extends Continuous {
+
+    constructor(Kmean=150, Kstdev=10, N0=100, b=0.11, d=0.1) {
+        super(N0, b, d)
+        this.Kmean = Kmean
+        this.Kstdev = Kstdev
+    }
+
+    carryingCapacity(t) {
+
+    }
+
+    population(t) {
+        return this.K / ( 1 + ( (this.K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+    }
+}
+
+
+/**
+ * Continuous logistic model with periodic carrying capacity
+ * assumptions:
+ *   density dependent birth (b') and death (d') rates
+ *   no genetic structure
+ *   no age or size structure
+ *   continuous-time growth with no time lags
+ *   periodic carrying capacity
+ */
+class PeriodicCapacity extends Continuous {
+
+    constructor(K=150, N0=100, b=0.11, d=0.1) {
+        super(N0, b, d)
+        this.K = K
+    }
+
+    carryingCapacity(t) {
+
+    }
+
+    population(t) {
+        return this.K / ( 1 + ( (this.K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+    }
+}
+
+
+/**
  * Discrete logistic model
  * assumptions:
  *   discrete birth and death events
