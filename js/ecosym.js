@@ -21,6 +21,9 @@ const randGaussian = (mean=0.0, stdev=1.0) => {
 }
 
 
+const mean = (valList) => valList.reduce((x, y) => x+y) / valList.length
+
+
 /**
  * Abstract continuous-time model.
  */
@@ -283,14 +286,27 @@ class StochasticCapacity extends Continuous {
         super(N0, b, d)
         this.Kmean = Kmean
         this.Kstdev = Kstdev
+        this.K = []
     }
 
     carryingCapacity(t) {
-
+        return randGaussian(this.Kmean, this.Kstdev)
     }
 
     population(t) {
-        return this.K / ( 1 + ( (this.K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+        let K = this.carryingCapacity(t)
+        this.K.push(K)
+        return K / ( 1 + ( (K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+    }
+
+    /**
+     * Calculate population at all points in a timespan
+     * @param timespan {Array[number]} - array of timepoints
+     * @return {Array[number]} - array of population counts
+     */
+    applyToTimespan(timespan) {
+        this.K = []
+        return super.applyToTimespan(timespan)
     }
 }
 
@@ -308,15 +324,27 @@ class PeriodicCapacity extends Continuous {
 
     constructor(K=150, N0=100, b=0.11, d=0.1) {
         super(N0, b, d)
-        this.K = K
+        this.K = []
     }
 
     carryingCapacity(t) {
-
+        return randGaussian(this.Kmean, this.Kstdev)
     }
 
     population(t) {
+        let K = this.carryingCapacity(t)
+        this.K.push(K)
         return this.K / ( 1 + ( (this.K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+    }
+
+    /**
+     * Calculate population at all points in a timespan
+     * @param timespan {Array[number]} - array of timepoints
+     * @return {Array[number]} - array of population counts
+     */
+    applyToTimespan(timespan) {
+        this.K = []
+        return super.applyToTimespan(timespan)
     }
 }
 

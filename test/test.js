@@ -98,6 +98,35 @@ test.testContinuousLogistic = function() {
 }
 
 
+test.testStochasticCapacity = function() {
+    'use strict'
+
+    console.log('\n\n***** StochasticCapacity Test *****\n')
+
+    let sc1 = new StochasticCapacity()
+    let times1 = range(0, 501, 20)
+    let popSpan1 = sc1.applyToTimespan(times1)
+    for (let i=0; i<times1.length; i++) {
+        console.log('population(' + times1[i] + '): ' + popSpan1[i])
+        console.log('  K(' + times1[i] + '): ' + sc1.K[i])
+    }
+    console.log('mean(population): ' + mean(popSpan1))
+    console.log('  mean(K): ' + mean(sc1.K))
+    console.log('\n')
+
+    let sc2 = new StochasticCapacity(200, 20)
+    let times2 = range(0, 501, 20)
+    let popSpan2 = sc2.applyToTimespan(times2)
+    for (let i=0; i<times2.length; i++) {
+        console.log('population(' + times2[i] + '): ' + popSpan2[i])
+        console.log('  K(' + times1[i] + '): ' + sc2.K[i])
+    }
+    console.log('mean(population): ' + mean(popSpan2))
+    console.log('  mean(K): ' + mean(sc2.K))
+    console.log('\n')
+}
+
+
 test.testDiscreteLogistic = function() {
     'use strict'
 
@@ -131,4 +160,5 @@ test.testDiscreteExponential()
 test.testEnvironmentalStochasticity()
 test.testDemographicStochasticity()
 test.testContinuousLogistic()
+test.testStochasticCapacity()
 test.testDiscreteLogistic()
