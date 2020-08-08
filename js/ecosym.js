@@ -322,19 +322,23 @@ class StochasticCapacity extends Continuous {
  */
 class PeriodicCapacity extends Continuous {
 
-    constructor(K=150, N0=100, b=0.11, d=0.1) {
+    constructor(Kmean=150, Kamp=20, Klen=80, N0=100, b=0.11, d=0.1) {
         super(N0, b, d)
+
+        this.Kmean = Kmean  // mean carrying capacity
+        this.Kamp = Kamp    // amplitude of carrying capacity change
+        this.Klen = Klen    // wavelength of carrying capacity change
         this.K = []
     }
 
     carryingCapacity(t) {
-        return randGaussian(this.Kmean, this.Kstdev)
+        return this.Kmean + this.Kamp * ( Math.cos(2.0*Math.PI*t / this.Klen) )
     }
 
     population(t) {
         let K = this.carryingCapacity(t)
         this.K.push(K)
-        return this.K / ( 1 + ( (this.K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+        return K / ( 1 + ( (K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
     }
 
     /**

@@ -127,6 +127,35 @@ test.testStochasticCapacity = function() {
 }
 
 
+test.testPeriodicCapacity = function() {
+    'use strict'
+
+    console.log('\n\n***** PeriodicCapacity Test *****\n')
+
+    let pc1 = new PeriodicCapacity()
+    let times1 = range(0, 501, 20)
+    let popSpan1 = pc1.applyToTimespan(times1)
+    for (let i=0; i<times1.length; i++) {
+        console.log('population(' + times1[i] + '): ' + popSpan1[i])
+        console.log('  K(' + times1[i] + '): ' + pc1.K[i])
+    }
+    console.log('mean(population): ' + mean(popSpan1))
+    console.log('  mean(K): ' + mean(pc1.K))
+    console.log('\n')
+
+    let pc2 = new PeriodicCapacity(200, 20)
+    let times2 = range(0, 501, 20)
+    let popSpan2 = pc2.applyToTimespan(times2)
+    for (let i=0; i<times2.length; i++) {
+        console.log('population(' + times2[i] + '): ' + popSpan2[i])
+        console.log('  K(' + times1[i] + '): ' + pc2.K[i])
+    }
+    console.log('mean(population): ' + mean(popSpan2))
+    console.log('  mean(K): ' + mean(pc2.K))
+    console.log('\n')
+}
+
+
 test.testDiscreteLogistic = function() {
     'use strict'
 
@@ -161,4 +190,5 @@ test.testEnvironmentalStochasticity()
 test.testDemographicStochasticity()
 test.testContinuousLogistic()
 test.testStochasticCapacity()
+test.testPeriodicCapacity()
 test.testDiscreteLogistic()
