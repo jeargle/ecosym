@@ -25,16 +25,17 @@ class ModelRow {
     }
 
     updateActive() {
-        this.active = this.el.select('.row-active-checkbox')
+        let view = this
+        view.active = view.el.select('.row-active-checkbox')
             .property('checked')
-        console.log('  active: ' + this.active)
+        view.list.plot()
     }
 
     render() {
         console.log('ModelRow.render()')
         let view = this
 
-        console.log(view.model.parameters())
+        // console.log(view.model.parameters())
 
         let equation = this.el.append('div')
             .classed('row-equation', true)
@@ -72,17 +73,16 @@ class ModelRow {
     addParam(span, param, idx) {
         let view = this
         let paramSpan = d3.select(span)
-        // if (idx > 0) {
+
         paramSpan.append('div')
             .classed('term-sign', true)
             .text(param.name + ':')
-        // }
+
         paramSpan.append('input')
             .classed('term-coefficient', true)
             .property('type', 'text')
             .property('value', param.value)
             .on('blur', function() {
-                // view.model.setCoeff(this.value, idx)
                 view.list.plot()
             })
             .on('keydown', function (d, e) {
@@ -91,11 +91,6 @@ class ModelRow {
                     $(this).blur()
                 }
             })
-        // paramSpan.append('div')
-        //     .classed('term-order', true)
-        //     .text('x')
-        //     .append('sup')
-        //     .text(parseInt(idx))
     }
 }
 
@@ -123,8 +118,7 @@ class ModelList {
 
         this.plotter = new Plotter(
             'plot',
-            this.rows.map(r => r.model),
-            // range(-5, 5.5, 0.5)
+            this.rows,
             timespan
         )
 
@@ -203,8 +197,20 @@ class ModelList {
  */
 class Plotter {
     plotId = 'plot'
-    ecoModels = []   // ecosym models
-    timespan = []     // set of timepoints (x-axis)
+    ecoModels = []   // ModelRows
+    timespan = []    // set of timepoints (x-axis)
+    colors = [       // default Plotly colors
+        'rgb(31, 119, 180)',
+        'rgb(255, 127, 14)',
+        'rgb(44, 160, 44)',
+        'rgb(214, 39, 40)',
+        'rgb(148, 103, 189)',
+        'rgb(140, 86, 75)',
+        'rgb(227, 119, 194)',
+        'rgb(127, 127, 127)',
+        'rgb(188, 189, 34)',
+        'rgb(23, 190, 207)'
+    ]
 
     constructor(plotId='plot', ecoModels=[], timespan=[]) {
         this.plotId = plotId
@@ -237,10 +243,13 @@ class Plotter {
         let populations = []
 
         for (let i=0; i<model.ecoModels.length; i++) {
-            populations.push({
-                x: model.timespan,
-                y: model.ecoModels[i].applyToTimespan(model.timespan)
-            })
+            if (model.ecoModels[i].active) {
+                populations.push({
+                    x: model.timespan,
+                    y: model.ecoModels[i].model.applyToTimespan(model.timespan),
+                    line: { color: model.colors[i] }
+                })
+            }
         }
 
         Plotly.newPlot(
