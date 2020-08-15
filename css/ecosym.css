@@ -43,10 +43,21 @@ body {
     border-radius: 5px;
 }
 
-/* .term { */
-/*     float: left; */
-/*     height: 40px; */
-/* } */
+.row-equation {
+    float: left;
+    height: 40px;
+    width: 400px;
+}
+
+.row-controls {
+    float: right;
+    height: 40px;
+    width: 180px;
+}
+
+.row-active {
+    padding-top: 10px;
+}
 
 .term-coefficient {
     float: left;

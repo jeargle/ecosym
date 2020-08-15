@@ -9,6 +9,7 @@ class ModelRow {
     el = null
     model = null
     plotter = null
+    active = true
 
     constructor(model, list) {
         if (model == null) {
@@ -23,13 +24,22 @@ class ModelRow {
         this.el = el
     }
 
+    updateActive() {
+        this.active = this.el.select('.row-active-checkbox')
+            .property('checked')
+        console.log('  active: ' + this.active)
+    }
+
     render() {
         console.log('ModelRow.render()')
         let view = this
 
         console.log(view.model.parameters())
 
-        let params = this.el.selectAll('span')
+        let equation = this.el.append('div')
+            .classed('row-equation', true)
+
+        let params = equation.selectAll('span')
             .data(view.model.parameters())
         params.enter()
             .append('div')
@@ -40,6 +50,17 @@ class ModelRow {
                 view.addParam.apply(view, [this, d, i])
             })
         params.exit().remove()
+
+        let controls = this.el.append('div')
+            .classed('row-controls', true)
+        // Checkbox to activate plot
+        controls.append('div')
+            .classed('row-active', true)
+            .append('input')
+            .classed('row-active-checkbox', true)
+            .property('type', 'checkbox')
+            .property('checked', view.active)
+            .on('change', view.updateActive.bind(view))
     }
 
     /**
