@@ -10,14 +10,16 @@ class ModelRow {
     model = null
     plotter = null
     active = true
+    id = 0
 
-    constructor(model, list) {
+    constructor(model, list, id) {
         if (model == null) {
             console.error('model required')
             // model = new Polynomial([0, 1])
         }
         this.model = model
         this.list = list
+        this.id = id
     }
 
     setEl(el) {
@@ -28,6 +30,13 @@ class ModelRow {
         let view = this
         view.active = view.el.select('.row-active-checkbox')
             .property('checked')
+        view.list.plot()
+    }
+
+    remove() {
+        let view = this
+        console.log('remove()')
+        view.list.removeModel(view)
         view.list.plot()
     }
 
@@ -54,6 +63,7 @@ class ModelRow {
 
         let controls = this.el.append('div')
             .classed('row-controls', true)
+
         // Checkbox to activate plot
         controls.append('div')
             .classed('row-active', true)
@@ -62,6 +72,12 @@ class ModelRow {
             .property('type', 'checkbox')
             .property('checked', view.active)
             .on('change', view.updateActive.bind(view))
+
+        // Delete button
+        controls.append('button')
+            .classed('row-delete', true)
+            .on('click', view.remove.bind(view))
+            .text('Delete')
     }
 
     /**
@@ -103,12 +119,14 @@ class ModelList {
     el = null
     rows = null
     plotter = null
+    idSequence = 1
 
     constructor(models=[], timespan, elId) {
         this.rows = []
 
         for (let i=0; i<models.length; i++) {
-            this.rows.push(new ModelRow(models[i], this))
+            this.rows.push(new ModelRow(models[i], this, 'model-row-' + this.idSequence))
+            this.idSequence++
         }
 
         if (elId != null) {
@@ -155,6 +173,7 @@ class ModelList {
 
         let rowLi = d3.select(li)
             .append('div')
+            .attr('id', row.id)
             .classed('model-row', true)
         row.setEl(rowLi)
         row.render()
@@ -175,8 +194,18 @@ class ModelList {
      * Remove Model from list
      * @param idx {number} - index into model list
      */
-    removeModel(idx) {
+    removeModel(model) {
         let view = this
+
+        console.log(model)
+        for (let i=0; i<view.rows.length; i++) {
+            console.log('  id ' + i + ': ' + (model.id == view.rows[i].id))
+            // console.log(view.rows[i])
+            if (model.id == view.rows[i].id) {
+                view.rows.splice(i, 1)
+                break
+            }
+        }
 
         view.render()
     }
