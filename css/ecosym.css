@@ -36,6 +36,7 @@ body {
     height: 40px;
     width: 600px;
     padding-left: 10px;
+    padding-right: 10px;
     margin-top: 5px;
     line-height: 40px;
     font-size: 16px;
@@ -56,13 +57,13 @@ body {
 }
 
 .row-active {
-    float: left;
+    float: right;
     padding-top: 10px;
     width: 30px;
 }
 
 .row-delete {
-    float: left;
+    float: right;
     margin-top: 10px;
 }
 

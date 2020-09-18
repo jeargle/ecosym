@@ -34,8 +34,9 @@ class ModelRow {
     }
 
     remove() {
+        console.log('ModelRow.remove()')
         let view = this
-        console.log('remove()')
+
         view.list.removeModel(view)
         view.list.plot()
     }
@@ -43,8 +44,6 @@ class ModelRow {
     render() {
         console.log('ModelRow.render()')
         let view = this
-
-        // console.log(view.model.parameters())
 
         let equation = this.el.append('div')
             .classed('row-equation', true)
@@ -64,6 +63,12 @@ class ModelRow {
         let controls = this.el.append('div')
             .classed('row-controls', true)
 
+        // Delete button
+        controls.append('button')
+            .classed('row-delete', true)
+            .on('click', view.remove.bind(view))
+            .text('Delete')
+
         // Checkbox to activate plot
         controls.append('div')
             .classed('row-active', true)
@@ -72,12 +77,6 @@ class ModelRow {
             .property('type', 'checkbox')
             .property('checked', view.active)
             .on('change', view.updateActive.bind(view))
-
-        // Delete button
-        controls.append('button')
-            .classed('row-delete', true)
-            .on('click', view.remove.bind(view))
-            .text('Delete')
     }
 
     /**
@@ -120,6 +119,7 @@ class ModelList {
     rows = null
     plotter = null
     idSequence = 1
+    timespan = null
 
     constructor(models=[], timespan, elId) {
         this.rows = []
@@ -133,11 +133,12 @@ class ModelList {
             this.elId = elId
         }
         this.el = d3.select(this.elId)
+        this.timespan = timespan
 
         this.plotter = new Plotter(
             'plot',
             this.rows,
-            timespan
+            this.timespan
         )
 
         this.render()
@@ -147,14 +148,16 @@ class ModelList {
         let view = this
         let ul = view.el.selectAll('#models')
         let li = ul.selectAll('li')
-            .data(view.rows)
+            .data(view.rows, function(d, i) {
+                return d.id;
+            });
         li.enter()
             .append('li')
             .each(function(d) {
                 view.addRow.apply(view, [this, d])
             })
         li.exit().remove()
-        // li.order()
+        li.order()
 
         view.plot()
     }
@@ -187,6 +190,7 @@ class ModelList {
     addModel(model, idx) {
         let view = this
 
+        view.plotter.setEcoModels(view.rows)
         view.render()
     }
 
@@ -197,16 +201,14 @@ class ModelList {
     removeModel(model) {
         let view = this
 
-        console.log(model)
         for (let i=0; i<view.rows.length; i++) {
-            console.log('  id ' + i + ': ' + (model.id == view.rows[i].id))
-            // console.log(view.rows[i])
             if (model.id == view.rows[i].id) {
                 view.rows.splice(i, 1)
                 break
             }
         }
 
+        view.plotter.setEcoModels(view.rows)
         view.render()
     }
 
@@ -249,11 +251,11 @@ class Plotter {
 
     /**
      * Set ecosym model
-     * @param ecoModel {Object} - ecosym model
+     * @param ecoModels {Array} - array of ecosym models
      */
-    // setEcoModel(ecoModel) {
-    //     this.ecoModel = ecoModel
-    // }
+    setEcoModels(ecoModels) {
+        this.ecoModels = ecoModels
+    }
 
     /**
      * Set timespan
@@ -270,6 +272,8 @@ class Plotter {
         let model = this
         let plotDiv = document.getElementById(model.plotId)
         let populations = []
+
+        // console.log(model.ecoModels)
 
         for (let i=0; i<model.ecoModels.length; i++) {
             if (model.ecoModels[i].active) {
