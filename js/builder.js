@@ -15,7 +15,6 @@ class ModelRow {
     constructor(model, list, id) {
         if (model == null) {
             console.error('model required')
-            // model = new Polynomial([0, 1])
         }
         this.model = model
         this.list = list
@@ -27,6 +26,7 @@ class ModelRow {
     }
 
     updateActive() {
+        console.log('ModelRow.updateActive()')
         let view = this
         view.active = view.el.select('.row-active-checkbox')
             .property('checked')
@@ -98,6 +98,8 @@ class ModelRow {
             .property('type', 'text')
             .property('value', param.value)
             .on('blur', function() {
+                view.model[param.name] = parseFloat(d3.select(this).property('value'))
+                view.model.refresh()
                 view.list.plot()
             })
             .on('keydown', function (d, e) {

@@ -37,6 +37,10 @@ class Continuous {
         this.N0 = N0
         this.b = b
         this.d = d
+        this.refresh()
+    }
+
+    refresh() {
         this.r = this.b - this.d
     }
 
@@ -74,6 +78,10 @@ class Discrete {
         this.N0 = N0
         this.b = b
         this.d = d
+        this.refresh()
+    }
+
+    refresh() {
         this.r = this.b - this.d
         this.lambda = this.r + 1
     }
