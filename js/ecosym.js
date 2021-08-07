@@ -25,7 +25,7 @@ const mean = (valList) => valList.reduce((x, y) => x+y) / valList.length
 
 
 /**
- * Abstract continuous-time model.
+ * Abstract continuous-time model
  */
 class Continuous {
     // b = 0.11   // birth rate
@@ -65,7 +65,7 @@ class Continuous {
 
 
 /**
- * Abstract discrete-time model.
+ * Abstract discrete-time model
  */
 class Discrete {
     // b = 0.11   // birth rate

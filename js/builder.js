@@ -3,6 +3,67 @@
 
 
 /**
+ * ControlBar
+ * This div sits above the ModelList and hold controls for adding new
+ * ModelRows.
+ */
+class ControlBar {
+    elId = '#control-bar'
+    el = null
+    modelTypes = null
+    modelList = null
+    rowTypeMenu = null
+
+    constructor(modelTypes, modelList) {
+        let view = this
+
+        if (modelTypes == null) {
+            console.error('modelTypes required')
+        }
+        this.modelTypes = modelTypes
+
+        if (modelList == null) {
+            console.error('modelList required')
+        }
+        this.modelList = modelList
+
+        this.el = d3.select(this.elId)
+
+        this.rowTypeMenu = this.el.select('#row-type-menu')
+        let rowTypes = this.rowTypeMenu.selectAll('option')
+            .data(view.modelTypes)
+        rowTypes.enter()
+            .append('option')
+            .each(function(d) {
+                d3.select(this)
+                    .property('value', d.name)
+                    .text(d.name)
+            })
+            .property('value', )
+        rowTypes.exit().remove()
+
+        let rowButton = this.el.select('#add-row-btn')
+            .on('click', view.addModelRow.bind(view))
+    }
+
+    /**
+     * Add a new ModelRow with the selected type to the ModelList.
+     */
+    addModelRow() {
+        console.log('ControlBar.addRow()')
+        let view = this
+
+        let modelName = view.rowTypeMenu.property('value')
+        console.log(modelName)
+        let modelType = view.modelTypes.find(mt => mt.name == modelName)
+        let modelRow = new modelType.modelClass()
+
+        view.modelList.addModel(modelRow)
+    }
+}
+
+
+/**
  * ModelRow
  */
 class ModelRow {
@@ -170,8 +231,8 @@ class ModelList {
 
     /**
      * Add Model to list
-     * @param model {Model}
-     * @param idx {number} - index into model list
+     * @param li {li}
+     * @param row {number} - index into model list
      */
     addRow(li, row) {
         let view = this
@@ -187,10 +248,16 @@ class ModelList {
     /**
      * Add Model to list
      * @param model {Model}
-     * @param idx {number} - index into model list
      */
-    addModel(model, idx) {
+    addModel(model) {
+        console.log('ModelList.addModel()')
         let view = this
+
+        console.log('rows.length: ' + view.rows.length + ', ' + view.idSequence)
+
+        view.rows.push(new ModelRow(model, view, 'model-row-' + view.idSequence))
+        view.idSequence++
+        console.log('rows.length: ' + view.rows.length + ', ' + view.idSequence)
 
         view.plotter.setEcoModels(view.rows)
         view.render()
@@ -198,7 +265,7 @@ class ModelList {
 
     /**
      * Remove Model from list
-     * @param idx {number} - index into model list
+     * @param model {Model}
      */
     removeModel(model) {
         let view = this
@@ -307,4 +374,17 @@ $(document).ready(function() {
          new DiscreteExponential(50, 0.115, 0.1)],
         range(0, 201, 20)
     )
+
+    let modelTypes = [
+        {
+            name: 'Continuous Exponential',
+            modelClass: ContinuousExponential
+        },
+        {
+            name: 'Discrete Exponential',
+            modelClass: DiscreteExponential
+        }
+    ]
+
+    let cb = new ControlBar(modelTypes, ml)
 })
