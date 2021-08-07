@@ -61,6 +61,14 @@ class Continuous {
     applyToTimespan(timespan) {
         return timespan.map((t) => this.population(t))
     }
+
+    parameters() {
+        return [
+            { name: 'N0', value: this.N0 },
+            { name: 'b', value: this.b },
+            { name: 'd', value: this.d }
+        ]
+    }
 }
 
 
@@ -116,6 +124,14 @@ class Discrete {
 
         return popSpan
     }
+
+    parameters() {
+        return [
+            { name: 'N0', value: this.N0 },
+            { name: 'b', value: this.b },
+            { name: 'd', value: this.d }
+        ]
+    }
 }
 
 
@@ -139,14 +155,6 @@ class ContinuousExponential extends Continuous {
 
     doublingTime() {
         return Math.log(2)/this.r
-    }
-
-    parameters() {
-        return [
-            { name: 'N0', value: this.N0 },
-            { name: 'b', value: this.b },
-            { name: 'd', value: this.d }
-        ]
     }
 }
 
@@ -176,14 +184,6 @@ class DiscreteExponential extends Discrete {
     doublingTime() {
         return Math.log(2)/this.r
     }
-
-    parameters() {
-        return [
-            { name: 'N0', value: this.N0 },
-            { name: 'b', value: this.b },
-            { name: 'd', value: this.d }
-        ]
-    }
 }
 
 
@@ -209,6 +209,16 @@ class EnvironmentalStochasticity extends Discrete {
         let model = this
         let rRand = randGaussian(model.rMean, model.rStdev)
         return prevPop + prevPop * rRand * timestep
+    }
+
+    parameters() {
+        return [
+            { name: 'N0', value: this.N0 },
+            { name: 'b', value: this.b },
+            { name: 'd', value: this.d },
+            { name: 'rMean', value: this.rMean },
+            { name: 'rStdev', value: this.rStdev }
+        ]
     }
 }
 
@@ -253,6 +263,16 @@ class DemographicStochasticity extends Discrete {
         console.log('events: ' + eventString)
 
         return nextPop
+    }
+
+    parameters() {
+        return [
+            { name: 'N0', value: this.N0 },
+            { name: 'b', value: this.b },
+            { name: 'd', value: this.d },
+            { name: 'rMean', value: this.rMean },
+            { name: 'rStdev', value: this.rStdev }
+        ]
     }
 }
 
@@ -316,6 +336,16 @@ class StochasticCapacity extends Continuous {
         this.K = []
         return super.applyToTimespan(timespan)
     }
+
+    parameters() {
+        return [
+            { name: 'N0', value: this.N0 },
+            { name: 'b', value: this.b },
+            { name: 'd', value: this.d },
+            { name: 'Kmean', value: this.Kmean },
+            { name: 'Kstdev', value: this.Kstdev }
+        ]
+    }
 }
 
 
@@ -358,6 +388,17 @@ class PeriodicCapacity extends Continuous {
         this.K = []
         return super.applyToTimespan(timespan)
     }
+
+    parameters() {
+        return [
+            { name: 'N0', value: this.N0 },
+            { name: 'b', value: this.b },
+            { name: 'd', value: this.d },
+            { name: 'Kmean', value: this.Kmean },
+            { name: 'Kamp', value: this.Kamp },
+            { name: 'Klen', value: this.Klen }
+        ]
+    }
 }
 
 
@@ -380,5 +421,14 @@ class DiscreteLogistic extends Discrete {
 
     populationNext(prevPop, timestep) {
         return prevPop + this.r * prevPop * (1.0 - prevPop/this.K)
+    }
+
+    parameters() {
+        return [
+            { name: 'N0', value: this.N0 },
+            { name: 'b', value: this.b },
+            { name: 'd', value: this.d },
+            { name: 'K', value: this.K }
+        ]
     }
 }

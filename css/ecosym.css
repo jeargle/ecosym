@@ -34,7 +34,7 @@ body {
 .model-row {
     clear: both;
     height: 40px;
-    width: 600px;
+    width: 800px;
     padding-left: 10px;
     padding-right: 10px;
     margin-top: 5px;
@@ -47,13 +47,13 @@ body {
 .row-equation {
     float: left;
     height: 40px;
-    width: 400px;
+    width: 680px;
 }
 
 .row-controls {
     float: right;
     height: 40px;
-    width: 180px;
+    width: 100px;
 }
 
 .row-active {
@@ -91,7 +91,7 @@ body {
 
 .term-sign {
     float: left;
-    width: 25px;
+    min-width: 25px;
     font-size: 16px;
     text-align: right;
 }

@@ -86,6 +86,21 @@ class ModelRow {
         this.el = el
     }
 
+    /**
+     * Set active status and checkbox.
+     * @param active {boolean} - whether to activate or deactivate
+     */
+    setActive(active=true) {
+        console.log('ModelRow.setActive()')
+        let view = this
+        view.el.select('.row-active-checkbox')
+            .property('checked', active)
+        view.active = active
+    }
+
+    /**
+     * Update active status based on checkbox and replot.
+     */
     updateActive() {
         console.log('ModelRow.updateActive()')
         let view = this
@@ -94,6 +109,9 @@ class ModelRow {
         view.list.plot()
     }
 
+    /**
+     * Remove model from the list.
+     */
     remove() {
         console.log('ModelRow.remove()')
         let view = this
@@ -281,6 +299,15 @@ class ModelList {
         view.render()
     }
 
+    setModelsActive(active=true) {
+        console.log('ModelList.setModelsActive()')
+        let view = this
+        view.active = view.el.select('.row-active-checkbox')
+            .property('checked')
+        view.rows.forEach(row => row.setActive(active))
+        view.list.plot()
+    }
+
     /**
      * Remove all Models from list
      */
@@ -383,6 +410,30 @@ $(document).ready(function() {
         {
             name: 'Discrete Exponential',
             modelClass: DiscreteExponential
+        },
+        {
+            name: 'Environmental Stochasticity',
+            modelClass: EnvironmentalStochasticity
+        },
+        {
+            name: 'Demographic Stochasticity',
+            modelClass: DemographicStochasticity
+        },
+        {
+            name: 'Continuous Logistic',
+            modelClass: ContinuousLogistic
+        },
+        {
+            name: 'Stochastic Capacity',
+            modelClass: StochasticCapacity
+        },
+        {
+            name: 'Periodic Capacity',
+            modelClass: PeriodicCapacity
+        },
+        {
+            name: 'Discrete Logistic',
+            modelClass: DiscreteLogistic
         }
     ]
 
