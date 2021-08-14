@@ -118,6 +118,7 @@ class Discrete {
         if (timespan.length > 1) {
             timestep = timespan[1] - timespan[0]
         }
+
         for (let i=1; i<timespan.length; i++) {
             popSpan[i] = model.populationNext(popSpan[i-1], timestep)
         }

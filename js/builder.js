@@ -42,8 +42,11 @@ class ControlBar {
             .property('value', )
         rowTypes.exit().remove()
 
-        let rowButton = this.el.select('#add-row-btn')
+        this.rowButton = this.el.select('#add-row-btn')
             .on('click', view.addModelRow.bind(view))
+
+        this.rowsActiveCheckbox = this.el.select('#rows-active-checkbox')
+            .on('change', view.setModelsActive.bind(view))
     }
 
     /**
@@ -59,6 +62,15 @@ class ControlBar {
         let modelRow = new modelType.modelClass()
 
         view.modelList.addModel(modelRow)
+    }
+
+    /**
+     * Set all Models either active or inactive
+     */
+    setModelsActive()  {
+        let view = this
+        // console.log('ControlBar.setModelsActive()')
+        view.modelList.setModelsActive(view.rowsActiveCheckbox.property('checked'))
     }
 }
 
@@ -299,13 +311,17 @@ class ModelList {
         view.render()
     }
 
+    /**
+     * Set all Models either active or inactive
+     * @param active {boolean}
+     */
     setModelsActive(active=true) {
         console.log('ModelList.setModelsActive()')
         let view = this
         view.active = view.el.select('.row-active-checkbox')
             .property('checked')
         view.rows.forEach(row => row.setActive(active))
-        view.list.plot()
+        view.plot()
     }
 
     /**
