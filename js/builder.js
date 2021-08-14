@@ -13,6 +13,8 @@ class ControlBar {
     modelTypes = null
     modelList = null
     rowTypeMenu = null
+    rowButton = null
+    rowsActiveCheckbox = null
 
     constructor(modelTypes, modelList) {
         let view = this
@@ -20,17 +22,17 @@ class ControlBar {
         if (modelTypes == null) {
             console.error('modelTypes required')
         }
-        this.modelTypes = modelTypes
+        view.modelTypes = modelTypes
 
         if (modelList == null) {
             console.error('modelList required')
         }
-        this.modelList = modelList
+        view.modelList = modelList
 
-        this.el = d3.select(this.elId)
+        view.el = d3.select(view.elId)
 
-        this.rowTypeMenu = this.el.select('#row-type-menu')
-        let rowTypes = this.rowTypeMenu.selectAll('option')
+        view.rowTypeMenu = view.el.select('#row-type-menu')
+        let rowTypes = view.rowTypeMenu.selectAll('option')
             .data(view.modelTypes)
         rowTypes.enter()
             .append('option')
@@ -42,10 +44,10 @@ class ControlBar {
             .property('value', )
         rowTypes.exit().remove()
 
-        this.rowButton = this.el.select('#add-row-btn')
+        view.rowButton = view.el.select('#add-row-btn')
             .on('click', view.addModelRow.bind(view))
 
-        this.rowsActiveCheckbox = this.el.select('#rows-active-checkbox')
+        view.rowsActiveCheckbox = view.el.select('#rows-active-checkbox')
             .on('change', view.setModelsActive.bind(view))
     }
 
@@ -53,11 +55,10 @@ class ControlBar {
      * Add a new ModelRow with the selected type to the ModelList.
      */
     addModelRow() {
-        console.log('ControlBar.addRow()')
+        // console.log('ControlBar.addRow()')
         let view = this
 
         let modelName = view.rowTypeMenu.property('value')
-        console.log(modelName)
         let modelType = view.modelTypes.find(mt => mt.name == modelName)
         let modelRow = new modelType.modelClass()
 
@@ -114,10 +115,34 @@ class ModelRow {
      * Update active status based on checkbox and replot.
      */
     updateActive() {
-        console.log('ModelRow.updateActive()')
+        // console.log('ModelRow.updateActive()')
         let view = this
         view.active = view.el.select('.row-active-checkbox')
             .property('checked')
+
+        let allActive = true
+        let allInactive = true
+        let activeCheckboxes = d3.selectAll('.row-active-checkbox')
+            .each((checkbox) => {
+                if (checkbox.active) {
+                    allInactive = false
+                } else {
+                    allActive = false
+                }
+            })
+
+        // Update rows-active-checkbox in ControlBar
+        let rowsActiveCheckbox = d3.select('#rows-active-checkbox')
+        if (allActive) {
+            rowsActiveCheckbox.property('checked', true)
+            rowsActiveCheckbox.property('indeterminate', false)
+        } else if (allInactive) {
+            rowsActiveCheckbox.property('checked', false)
+            rowsActiveCheckbox.property('indeterminate', false)
+        } else {
+            rowsActiveCheckbox.property('checked', false)
+            rowsActiveCheckbox.property('indeterminate', true)
+        }
         view.list.plot()
     }
 
