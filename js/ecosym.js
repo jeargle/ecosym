@@ -208,8 +208,10 @@ class EnvironmentalStochasticity extends Discrete {
 
     populationNext(prevPop, timestep) {
         let model = this
-        let rRand = randGaussian(model.rMean, model.rStdev)
-        return prevPop + prevPop * rRand * timestep
+        const rRand = randGaussian(model.rMean, model.rStdev)
+        const nextPop = prevPop + prevPop * rRand * timestep
+
+        return nextPop > 0 ? nextPop : 0
     }
 
     parameters() {
@@ -238,32 +240,40 @@ class DemographicStochasticity extends Discrete {
         super(N0, b, d)
         this.rMean = rMean
         this.rStdev = rStdev
-        this.eventRate = this.b + this.d
     }
 
     populationNext(prevPop, timestep) {
+        // TODO - check model specifications.  looks like rMean and rStdev
+        // are not being used here.
         let model = this
         // let rRand = randGaussian(model.rMean, model.rStdev)
-        let floatEvents = model.eventRate * prevPop * timestep
+        const eventRate = model.b + model.d
+        let floatEvents = eventRate * prevPop * timestep
         let numEvents = Math.floor(floatEvents)
-        let eventRemainder = floatEvents - numEvents
+        const eventRemainder = floatEvents - numEvents
         numEvents += Math.random() < eventRemainder ? 1 : 0
         let nextPop = prevPop
-        let birthProbability = model.b / model.eventRate
+        let birthProbability = model.b / eventRate
         let eventString = ''
 
+        let births = 0
+        let deaths = 0
         for (let i=0; i<numEvents; i++) {
             if (Math.random() < birthProbability) {
                 nextPop += 1
                 eventString += 'B'
+                births += 1
             } else {
                 nextPop -= 1
                 eventString += 'D'
+                deaths += 1
             }
         }
-        console.log('events: ' + eventString)
+        // console.log('events: ' + eventString)
+        console.log('  births: ' + births)
+        console.log('  deaths: ' + deaths)
 
-        return nextPop
+        return nextPop > 0 ? nextPop : 0
     }
 
     parameters() {
@@ -325,7 +335,9 @@ class StochasticCapacity extends Continuous {
     population(t) {
         let K = this.carryingCapacity(t)
         this.K.push(K)
-        return K / ( 1 + ( (K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+        const pop = K / ( 1 + ( (K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+
+        return pop > 0 ? pop : 0
     }
 
     /**
@@ -377,7 +389,9 @@ class PeriodicCapacity extends Continuous {
     population(t) {
         let K = this.carryingCapacity(t)
         this.K.push(K)
-        return K / ( 1 + ( (K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+        const pop = K / ( 1 + ( (K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+
+        return pop > 0 ? pop : 0
     }
 
     /**
@@ -421,7 +435,8 @@ class DiscreteLogistic extends Discrete {
     }
 
     populationNext(prevPop, timestep) {
-        return prevPop + this.r * prevPop * (1.0 - prevPop/this.K)
+        const nextPop = prevPop + this.r * prevPop * (1.0 - prevPop/this.K)
+        return nextPop > 0 ? nextPop : 0
     }
 
     parameters() {
