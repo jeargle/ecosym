@@ -49,6 +49,9 @@ class ControlBar {
 
         view.rowsActiveCheckbox = view.el.select('#rows-active-checkbox')
             .on('change', view.setModelsActive.bind(view))
+
+        view.recalculateButton = view.el.select('#recalculate-btn')
+            .on('click', view.plot.bind(view))
     }
 
     /**
@@ -69,9 +72,18 @@ class ControlBar {
      * Set all Models either active or inactive
      */
     setModelsActive()  {
-        let view = this
         // console.log('ControlBar.setModelsActive()')
+        let view = this
         view.modelList.setModelsActive(view.rowsActiveCheckbox.property('checked'))
+    }
+
+    /**
+     * Plot the ecosym models
+     */
+    plot()  {
+        // console.log('ControlBar.plot()')
+        let view = this
+        view.modelList.plot()
     }
 }
 
@@ -150,15 +162,18 @@ class ModelRow {
      * Remove model from the list.
      */
     remove() {
-        console.log('ModelRow.remove()')
+        // console.log('ModelRow.remove()')
         let view = this
 
         view.list.removeModel(view)
         view.list.plot()
     }
 
+    /**
+     * Build and render row.
+     */
     render() {
-        console.log('ModelRow.render()')
+        // console.log('ModelRow.render()')
         let view = this
 
         let equation = this.el.append('div')
@@ -196,7 +211,7 @@ class ModelRow {
     }
 
     /**
-     * Add editable param to model display
+     * Add editable param to model display.
      * @param span {span} - span element
      * @param param {number} - parameter data
      * @param idx {number} - index into parameter list
@@ -262,6 +277,9 @@ class ModelList {
         this.render()
     }
 
+    /**
+     *
+     */
     render() {
         let view = this
         let ul = view.el.selectAll('#models')
@@ -280,6 +298,9 @@ class ModelList {
         view.plot()
     }
 
+    /**
+     * Plot the ecosym models
+     */
     plot() {
         this.plotter.plot()
     }
@@ -403,7 +424,7 @@ class Plotter {
     }
 
     /**
-     * Plot the ecosym model
+     * Plot the ecosym models
      */
     plot() {
         let model = this
