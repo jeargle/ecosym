@@ -47,13 +47,13 @@ body {
 .row-equation {
     float: left;
     height: 40px;
-    width: 680px;
+    width: 640px;
 }
 
 .row-controls {
     float: right;
     height: 40px;
-    width: 100px;
+    width: 140px;
 }
 
 .row-active {
@@ -63,6 +63,11 @@ body {
 }
 
 .row-delete {
+    float: right;
+    margin-top: 10px;
+}
+
+.row-clone {
     float: right;
     margin-top: 10px;
 }

@@ -69,6 +69,10 @@ class Continuous {
             { name: 'd', value: this.d }
         ]
     }
+
+    clone() {
+        return new Continuous(this.N0, this.b, this.d)
+    }
 }
 
 
@@ -133,6 +137,10 @@ class Discrete {
             { name: 'd', value: this.d }
         ]
     }
+
+    clone() {
+        return new Discrete(this.N0, this.b, this.d)
+    }
 }
 
 
@@ -156,6 +164,10 @@ class ContinuousExponential extends Continuous {
 
     doublingTime() {
         return Math.log(2)/this.r
+    }
+
+    clone() {
+        return new ContinuousExponential(this.N0, this.b, this.d)
     }
 }
 
@@ -184,6 +196,10 @@ class DiscreteExponential extends Discrete {
 
     doublingTime() {
         return Math.log(2)/this.r
+    }
+
+    clone() {
+        return new DiscreteExponential(this.N0, this.b, this.d)
     }
 }
 
@@ -222,6 +238,12 @@ class EnvironmentalStochasticity extends Discrete {
             { name: 'rMean', value: this.rMean },
             { name: 'rStdev', value: this.rStdev }
         ]
+    }
+
+    clone() {
+        return new EnvironmentalStochasticity(
+            this.rMean, this.rStdev, this.N0, this.b, this.d
+        )
     }
 }
 
@@ -285,6 +307,12 @@ class DemographicStochasticity extends Discrete {
             { name: 'rStdev', value: this.rStdev }
         ]
     }
+
+    clone() {
+        return new DemographicStochasticity(
+            this.rMean, this.rStdev, this.N0, this.b, this.d
+        )
+    }
 }
 
 
@@ -306,6 +334,12 @@ class ContinuousLogistic extends Continuous {
 
     population(t) {
         return this.K / ( 1 + ( (this.K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+    }
+
+    clone() {
+        return new ContinuousLogistic(
+            this.K, this.N0, this.b, this.d
+        )
     }
 }
 
@@ -358,6 +392,12 @@ class StochasticCapacity extends Continuous {
             { name: 'Kmean', value: this.Kmean },
             { name: 'Kstdev', value: this.Kstdev }
         ]
+    }
+
+    clone() {
+        return new StochasticCapacity(
+            this.Kmean, this.Kstdev, this.N0, this.b, this.d
+        )
     }
 }
 
@@ -414,6 +454,12 @@ class PeriodicCapacity extends Continuous {
             { name: 'Klen', value: this.Klen }
         ]
     }
+
+    clone() {
+        return new PeriodicCapacity(
+            this.Kmean, this.Kamp, this.Klen, this.N0, this.b, this.d
+        )
+    }
 }
 
 
@@ -446,5 +492,11 @@ class DiscreteLogistic extends Discrete {
             { name: 'd', value: this.d },
             { name: 'K', value: this.K }
         ]
+    }
+
+    clone() {
+        return new DiscreteLogistic(
+            this.K, this.N0, this.b, this.d
+        )
     }
 }

@@ -63,9 +63,9 @@ class ControlBar {
 
         let modelName = view.rowTypeMenu.property('value')
         let modelType = view.modelTypes.find(mt => mt.name == modelName)
-        let modelRow = new modelType.modelClass()
+        let model = new modelType.modelClass()
 
-        view.modelList.addModel(modelRow)
+        view.modelList.addModel(model)
     }
 
     /**
@@ -170,6 +170,17 @@ class ModelRow {
     }
 
     /**
+     * Add new copy of model to the list.
+     */
+    clone() {
+        console.log('ModelRow.clone()')
+        let view = this
+
+        view.list.addModel(view.model.clone())
+        view.list.plot()
+    }
+
+    /**
      * Build and render row.
      */
     render() {
@@ -199,6 +210,12 @@ class ModelRow {
             .classed('row-delete', true)
             .on('click', view.remove.bind(view))
             .text('Delete')
+
+        // Clone button
+        controls.append('button')
+            .classed('row-clone', true)
+            .on('click', view.clone.bind(view))
+            .text('Clone')
 
         // Checkbox to activate plot
         controls.append('div')
