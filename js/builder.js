@@ -3,6 +3,51 @@
 
 
 /**
+ * Modal
+ * This div pops up in the middle of the screen.
+ */
+class PopupModal {
+    elId = '#popup-modal'
+    el = null
+    active = false
+
+    constructor() {
+        let view = this
+
+        view.el = d3.select(view.elId)
+        view.modalButton = d3.select('#modal-btn')
+            .on('click', view.modalBtn.bind(view))
+    }
+
+    activate() {
+        console.log('PopupModal.activate()')
+        let view = this
+
+        view.el.style('display', 'block')
+        view.active = true
+    }
+
+    deactivate() {
+        console.log('PopupModal.deactivate()')
+        let view = this
+        view.el.style('display', 'none')
+        view.active = false
+    }
+
+    modalBtn() {
+        console.log('PopupModal.modalBtn()')
+        let view = this
+
+        if (view.active) {
+            view.deactivate()
+        } else {
+            view.activate()
+        }
+    }
+}
+
+
+/**
  * ControlBar
  * This div sits above the ModelList and hold controls for adding new
  * ModelRows.
@@ -517,4 +562,5 @@ $(document).ready(function() {
     ]
 
     let cb = new ControlBar(modelTypes, ml)
+    let pm = new PopupModal()
 })
