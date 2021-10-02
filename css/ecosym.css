@@ -115,8 +115,6 @@ body {
 #popup-modal {
     display: none;
     position: absolute;
-    left: 100px;
-    top: 100px;
     width: 400px;
     height: 200px;
     line-height: 32px;

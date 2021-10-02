@@ -22,8 +22,13 @@ class PopupModal {
     activate() {
         console.log('PopupModal.activate()')
         let view = this
+        const width = parseInt(view.el.style('width'), 10)
+        const height = parseInt(view.el.style('height'), 10)
 
-        view.el.style('display', 'block')
+        view.el
+            .style('left', window.innerWidth/2 - width/2)
+            .style('top', window.innerHeight/2 - height/2)
+            .style('display', 'block')
         view.active = true
     }
 
