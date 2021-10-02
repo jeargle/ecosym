@@ -17,6 +17,10 @@ class PopupModal {
         view.el = d3.select(view.elId)
         view.modalButton = d3.select('#modal-btn')
             .on('click', view.modalBtn.bind(view))
+        view.modalButton = d3.select('#modal-btn-cancel')
+            .on('click', view.deactivate.bind(view))
+        view.modalButton = d3.select('#modal-btn-ok')
+            .on('click', view.deactivate.bind(view))
     }
 
     activate() {
