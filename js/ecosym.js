@@ -425,6 +425,8 @@ class StochasticCapacity extends Continuous {
  */
 class PeriodicCapacity extends Continuous {
 
+    extinct = false
+
     constructor(Kmean=150, Kamp=20, Klen=80, N0=100, b=0.11, d=0.1) {
         super(N0, b, d)
 
@@ -439,11 +441,20 @@ class PeriodicCapacity extends Continuous {
     }
 
     population(t) {
+        if (this.extinct) {
+            return 0
+        }
+
         let K = this.carryingCapacity(t)
         this.K.push(K)
-        const pop = K / ( 1 + ( (K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
 
-        return pop > 0 ? pop : 0
+        let pop = K / ( 1 + ( (K-this.N0) / this.N0 ) * Math.exp(-this.r*t) )
+        if (pop < 0) {
+            pop = 0
+            this.extinct = true
+        }
+
+        return pop
     }
 
     /**
@@ -453,6 +464,7 @@ class PeriodicCapacity extends Continuous {
      */
     applyToTimespan(timespan) {
         this.K = []
+        this.extinct = false
         return super.applyToTimespan(timespan)
     }
 
