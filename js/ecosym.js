@@ -213,8 +213,6 @@ class DiscreteExponential extends Discrete {
  *   discrete-time growth with no time lags
  */
 class EnvironmentalStochasticity extends Discrete {
-    // rMean = 0.01    // mean growth rate
-    // rStdev = 0.05   // standard deviation of growth rate
 
     constructor(rMean=0.01, rStdev=0.05, N0=100, b=0.11, d=0.1) {
         super(N0, b, d)
@@ -325,7 +323,6 @@ class DemographicStochasticity extends Discrete {
  *   continuous-time growth with no time lags
  */
 class ContinuousLogistic extends Continuous {
-    // K = 150    // carrying capacity K = (b - d) / (a + c)
 
     constructor(K=150, N0=100, b=0.11, d=0.1) {
         super(N0, b, d)
@@ -497,7 +494,6 @@ class PeriodicCapacity extends Continuous {
  *   discrete-time growth with no time lags
  */
 class DiscreteLogistic extends Discrete {
-    // K = 150    // carrying capacity K = (b - d) / (a + c)
 
     constructor(K=150, N0=100, b=0.11, d=0.1) {
         super(N0, b, d)
