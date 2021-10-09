@@ -18,9 +18,9 @@ class PopupModal {
         view.modalButton = d3.select('#modal-btn')
             .on('click', view.modalBtn.bind(view))
         view.modalButton = d3.select('#modal-btn-cancel')
-            .on('click', view.deactivate.bind(view))
+            .on('click', view.onCancel.bind(view))
         view.modalButton = d3.select('#modal-btn-ok')
-            .on('click', view.deactivate.bind(view))
+            .on('click', view.onOk.bind(view))
     }
 
     activate() {
@@ -41,6 +41,16 @@ class PopupModal {
         let view = this
         view.el.style('display', 'none')
         view.active = false
+    }
+
+    onOk() {
+        console.log('PopupModal.onOk()')
+        this.deactivate()
+    }
+
+    onCancel() {
+        console.log('PopupModal.onCancel()')
+        this.deactivate()
     }
 
     modalBtn() {
