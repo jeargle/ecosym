@@ -520,3 +520,26 @@ class DiscreteLogistic extends Discrete {
         )
     }
 }
+
+
+/**
+ * LifeTable
+ * Hold initial and calculated data about different age categories for
+ * a species.
+ */
+class LifeTable {
+
+    constructor() {
+    }
+}
+
+
+/**
+ * LeslieMatrix
+ * Transition probability matrix between different life stages.
+ */
+class LeslieMatrix {
+
+    constructor() {
+    }
+}
